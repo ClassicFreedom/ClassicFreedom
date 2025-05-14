@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ClassicFreedom</title>
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .social-icon {
+      color: #111827;
+      font-size: 24px;
+      transition: transform 0.2s ease;
+    }
+    .social-icon:hover {
+      transform: scale(1.1);
+    }
+  </style>
+</head>
+<body class="bg-white text-[#111827]">
+
+  <!-- Hero Section -->
+  <section class="text-center py-20 px-6 bg-gradient-to-br from-[#f9fafb] to-white">
+    <h1 class="text-4xl sm:text-5xl font-extrabold mb-4">ClassicFreedom</h1>
+    <h2 class="text-xl font-semibold text-[#0d9488] mb-2">Reimagined</h2>
+    <p class="max-w-xl mx-auto mb-6">Weekly insights for digital nomads — crypto, remote work, geoarbitrage, and borderless freedom.</p>
+    <form class="max-w-md mx-auto flex flex-col sm:flex-row gap-2 mb-8">
+      <input type="email" placeholder="Enter your email" class="flex-1 px-4 py-2 rounded-full border border-gray-300" required />
+      <button class="bg-[#0d9488] text-white px-6 py-2 rounded-full font-bold hover:opacity-90 transition">Join the Movement</button>
+    </form>
+    <!-- Social Media Links -->
+    <div class="flex justify-center gap-8 text-2xl">
+      <a href="#" class="social-icon" title="Follow us on Twitter"><i class="fab fa-twitter fa-2x"></i></a>
+      <a href="#" class="social-icon" title="Follow us on Instagram"><i class="fab fa-instagram fa-2x"></i></a>
+      <a href="#" class="social-icon" title="Follow us on YouTube"><i class="fab fa-youtube fa-2x"></i></a>
+    </div>
+  </section>
+
+  <!-- Featured Posts -->
+  <section class="py-16 px-6">
+    <h2 class="text-2xl font-bold text-center mb-8">Featured Posts</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Post Card Example -->
+      <div class="border rounded-2xl p-6 shadow-sm">
+        <span class="text-sm text-[#0284c7] font-semibold">Crypto</span>
+        <h3 class="text-xl font-bold my-2">Mastering Bitcoin for Daily Use</h3>
+        <p class="mb-4">A quick-start guide for using crypto as a digital nomad.</p>
+        <button class="text-[#0d9488] font-semibold hover:underline">Read More</button>
+      </div>
+      <!-- Duplicate and customize more cards as needed -->
+    </div>
+    <div class="text-center mt-8">
+      <button class="bg-[#0284c7] text-white px-6 py-2 rounded-full font-bold hover:opacity-90 transition">View All Posts</button>
+    </div>
+  </section>
+
+  <!-- About / Pitch Section -->
+  <section class="py-16 px-6 bg-[#f9fafb] text-center">
+    <p class="max-w-2xl mx-auto mb-6">
+      ClassicFreedom delivers actionable tips for living and working anywhere in the world. From setting up your remote work stack to using crypto and tax-efficient travel strategies, this is your edge in the global economy.
+    </p>
+    <form class="max-w-md mx-auto flex flex-col sm:flex-row gap-2">
+      <input type="email" placeholder="Enter your email" class="flex-1 px-4 py-2 rounded-full border border-gray-300" required />
+      <button class="bg-[#0d9488] text-white px-6 py-2 rounded-full font-bold hover:opacity-90 transition">Join the Movement</button>
+    </form>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-8 px-6 text-center border-t text-sm">
+    <div class="mb-2">
+      <a href="#" class="mx-2 hover:underline">About</a>
+      <a href="#" class="mx-2 hover:underline">Blog</a>
+      <a href="#" class="mx-2 hover:underline">Subscribe</a>
+      <a href="#" class="mx-2 hover:underline">Contact</a>
+      <a href="admin.html" class="mx-2 text-gray-500 hover:underline">Admin</a>
+    </div>
+    <p>&copy; 2025 ClassicFreedom. All rights reserved.</p>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html> 
