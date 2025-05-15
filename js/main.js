@@ -120,4 +120,43 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             });
         }
     });
+});
+
+// Post Modal Functionality
+const modal = document.getElementById('postModal');
+const modalContent = document.getElementById('modalContent');
+const closeModal = document.querySelector('.close-modal');
+
+// Close modal when clicking the close button or outside the modal
+closeModal.onclick = () => modal.style.display = 'none';
+window.onclick = (event) => {
+    if (event.target === modal) {
+        modal.style.display = 'none';
+    }
+};
+
+// Handle post card clicks
+document.querySelectorAll('.post-card').forEach(card => {
+    card.addEventListener('click', () => {
+        const title = card.querySelector('h3').textContent;
+        const category = card.querySelector('span').textContent;
+        const description = card.querySelector('p').textContent;
+        const image = card.querySelector('img').src;
+
+        // Populate modal content
+        modalContent.innerHTML = `
+            <div class="mb-6">
+                <img src="${image}" alt="${title}" class="w-full rounded-lg mb-4">
+                <span class="text-sm text-[#0284c7] font-semibold">${category}</span>
+                <h2 class="text-2xl font-bold my-2">${title}</h2>
+                <div class="prose max-w-none">
+                    <p>${description}</p>
+                    <!-- Add more content here as needed -->
+                </div>
+            </div>
+        `;
+
+        // Show modal
+        modal.style.display = 'block';
+    });
 }); 

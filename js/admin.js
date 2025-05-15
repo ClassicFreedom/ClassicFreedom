@@ -111,17 +111,17 @@ logoutBtn.addEventListener('click', () => {
 
 // Tab switching
 postsTabBtn.addEventListener('click', () => {
-    postsPanel.classList.remove('hidden');
-    socialPanel.classList.add('hidden');
     postsTabBtn.classList.add('bg-[#0d9488]', 'text-white');
     socialTabBtn.classList.remove('bg-[#0d9488]', 'text-white');
+    postsPanel.classList.remove('hidden');
+    socialPanel.classList.add('hidden');
 });
 
 socialTabBtn.addEventListener('click', () => {
-    socialPanel.classList.remove('hidden');
-    postsPanel.classList.add('hidden');
     socialTabBtn.classList.add('bg-[#0d9488]', 'text-white');
     postsTabBtn.classList.remove('bg-[#0d9488]', 'text-white');
+    socialPanel.classList.remove('hidden');
+    postsPanel.classList.add('hidden');
 });
 
 // Posts Management

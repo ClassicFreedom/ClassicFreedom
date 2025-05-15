@@ -11,7 +11,10 @@
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <style>
-    body { font-family: 'Inter', sans-serif; }
+    body { 
+      font-family: 'Inter', sans-serif;
+      background-color: #fafafa;
+    }
     .social-icon {
       color: #111827;
       font-size: 24px;
@@ -20,9 +23,42 @@
     .social-icon:hover {
       transform: scale(1.1);
     }
+    .post-card {
+      transition: transform 0.2s ease;
+      cursor: pointer;
+    }
+    .post-card:hover {
+      transform: translateY(-2px);
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+    }
+    .modal-content {
+      background-color: white;
+      margin: 10% auto;
+      padding: 20px;
+      width: 90%;
+      max-width: 800px;
+      border-radius: 1rem;
+      position: relative;
+    }
+    .close-modal {
+      position: absolute;
+      right: 20px;
+      top: 20px;
+      font-size: 24px;
+      cursor: pointer;
+    }
   </style>
 </head>
-<body class="bg-white text-[#111827]">
+<body class="bg-[#fafafa]">
 
   <!-- Hero Section -->
   <section class="text-center py-20 px-6 bg-gradient-to-br from-[#f9fafb] to-white">
@@ -46,7 +82,10 @@
     <h2 class="text-2xl font-bold text-center mb-8">Featured Posts</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <!-- Post Card Example -->
-      <div class="border rounded-2xl p-6 shadow-sm">
+      <div class="post-card border rounded-2xl p-6 shadow-sm bg-white">
+        <div class="aspect-w-16 aspect-h-9 mb-4">
+          <img src="https://via.placeholder.com/400x225" alt="Post thumbnail" class="rounded-lg object-cover w-full h-48">
+        </div>
         <span class="text-sm text-[#0284c7] font-semibold">Crypto</span>
         <h3 class="text-xl font-bold my-2">Mastering Bitcoin for Daily Use</h3>
         <p class="mb-4">A quick-start guide for using crypto as a digital nomad.</p>
@@ -81,6 +120,16 @@
     </div>
     <p>&copy; 2025 ClassicFreedom. All rights reserved.</p>
   </footer>
+
+  <!-- Post Modal -->
+  <div id="postModal" class="modal">
+    <div class="modal-content">
+      <span class="close-modal">&times;</span>
+      <div id="modalContent">
+        <!-- Post content will be inserted here -->
+      </div>
+    </div>
+  </div>
 
   <script src="js/main.js"></script>
 </body>
