@@ -68,8 +68,15 @@
                         <input type="text" id="postCategory" class="w-full px-3 py-2 border rounded-lg" required>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium mb-1" for="postDescription">Description</label>
-                        <textarea id="postDescription" class="w-full px-3 py-2 border rounded-lg" rows="3" required></textarea>
+                        <label class="block text-sm font-medium mb-1" for="postDescription">Short Description</label>
+                        <textarea id="postDescription" class="w-full px-3 py-2 border rounded-lg" rows="2" required 
+                            placeholder="A brief summary of the article (shown in previews)"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1" for="postContent">Article Content</label>
+                        <textarea id="postContent" class="w-full px-3 py-2 border rounded-lg font-mono text-sm" rows="10" required 
+                            placeholder="Full article content. Supports Markdown formatting."></textarea>
+                        <p class="text-sm text-gray-500 mt-1">Use Markdown for formatting. Example: **bold**, *italic*, # heading</p>
                     </div>
                     <div>
                         <label class="block text-sm font-medium mb-1" for="postThumbnail">Thumbnail Image</label>
