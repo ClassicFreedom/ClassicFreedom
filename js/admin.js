@@ -129,9 +129,12 @@ let editingPostId = null;
 
 function createPostElement(post) {
     const div = document.createElement('div');
-    div.className = 'border rounded-lg p-4 flex justify-between items-start';
+    div.className = 'border rounded-lg p-4 flex items-start gap-4 bg-white';
     div.innerHTML = `
-        <div>
+        <div class="w-24 h-24 flex-shrink-0">
+            <img src="${post.thumbnail || 'https://via.placeholder.com/100x100'}" alt="${post.title}" class="w-full h-full object-cover rounded">
+        </div>
+        <div class="flex-1">
             <div class="flex items-center gap-2 mb-2">
                 <span class="text-sm text-[#0284c7] font-semibold">${post.category}</span>
             </div>
@@ -154,9 +157,17 @@ function createPostElement(post) {
 function loadPosts() {
     const posts = JSON.parse(safeLocalStorage('get', 'posts') || '[]');
     postsList.innerHTML = '';
-    posts.forEach(post => {
-        postsList.appendChild(createPostElement(post));
-    });
+    
+    if (posts.length === 0) {
+        const emptyState = document.createElement('div');
+        emptyState.className = 'text-center py-8 text-gray-500';
+        emptyState.innerHTML = 'No posts yet. Click "Add New Post" to create your first post.';
+        postsList.appendChild(emptyState);
+    } else {
+        posts.forEach(post => {
+            postsList.appendChild(createPostElement(post));
+        });
+    }
 }
 
 function savePosts(posts) {

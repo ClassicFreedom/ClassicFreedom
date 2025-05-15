@@ -67,14 +67,26 @@ document.addEventListener('DOMContentLoaded', () => {
                 const stored = localStorage.getItem('posts');
                 if (stored) {
                     posts = JSON.parse(stored);
+                } else {
+                    posts = [];
                 }
             }
 
             const postsContainer = document.querySelector('.grid');
             const loadMoreBtn = document.querySelector('#loadMoreBtn');
             
-            if (postsContainer && posts && posts.length > 0) {
-                // Calculate pagination
+            if (postsContainer) {
+                // Get existing placeholder posts
+                const placeholderPosts = Array.from(postsContainer.children).map(post => ({
+                    isPlaceholder: true,
+                    category: post.querySelector('span').textContent,
+                    title: post.querySelector('h3').textContent,
+                    description: post.querySelector('p').textContent,
+                    thumbnail: post.querySelector('img').src
+                }));
+
+                // Calculate how many placeholders to show
+                const totalToShow = Math.max(6, posts.length);
                 const start = 0;
                 const end = currentPage * postsPerPage;
                 const hasMorePosts = posts.length > end;
@@ -84,8 +96,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     loadMoreBtn.style.display = hasMorePosts ? 'block' : 'none';
                 }
 
+                // Combine real posts with placeholders if needed
+                let displayPosts = posts.slice(start, end);
+                if (displayPosts.length < 6) {
+                    const neededPlaceholders = 6 - displayPosts.length;
+                    displayPosts = [...displayPosts, ...placeholderPosts.slice(0, neededPlaceholders)];
+                }
+
                 // Display posts
-                postsContainer.innerHTML = posts.slice(start, end).map(post => `
+                postsContainer.innerHTML = displayPosts.map(post => `
                     <div class="post-card border rounded-2xl p-6 shadow-sm bg-white">
                         <div class="aspect-w-16 aspect-h-9 mb-4">
                             <img src="${post.thumbnail || 'https://via.placeholder.com/400x225'}" alt="${post.title}" class="rounded-lg object-cover w-full h-48">

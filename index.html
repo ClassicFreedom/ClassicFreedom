@@ -36,25 +36,44 @@
       top: 0;
       left: 0;
       width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.9);
       z-index: 1000;
+      overflow-y: auto;
     }
     .modal-content {
       background-color: white;
-      margin: 10% auto;
-      padding: 20px;
-      width: 90%;
-      max-width: 800px;
-      border-radius: 1rem;
+      width: 100%;
+      min-height: 100vh;
+      padding: 2rem;
       position: relative;
+      animation: modalSlideIn 0.3s ease-out;
+    }
+    @keyframes modalSlideIn {
+      from {
+        transform: translateY(10px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
     }
     .close-modal {
-      position: absolute;
-      right: 20px;
-      top: 20px;
-      font-size: 24px;
+      position: fixed;
+      right: 2rem;
+      top: 2rem;
+      font-size: 2rem;
+      color: white;
       cursor: pointer;
+      z-index: 1001;
+      background: rgba(0, 0, 0, 0.5);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
   </style>
 </head>
@@ -81,7 +100,7 @@
   <section class="py-16 px-6">
     <h2 class="text-2xl font-bold text-center mb-8">Featured Posts</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <!-- Post Card Example -->
+      <!-- Placeholder Posts -->
       <div class="post-card border rounded-2xl p-6 shadow-sm bg-white">
         <div class="aspect-w-16 aspect-h-9 mb-4">
           <img src="https://via.placeholder.com/400x225" alt="Post thumbnail" class="rounded-lg object-cover w-full h-48">
@@ -91,7 +110,51 @@
         <p class="mb-4">A quick-start guide for using crypto as a digital nomad.</p>
         <button class="text-[#0d9488] font-semibold hover:underline">Read More</button>
       </div>
-      <!-- Duplicate and customize more cards as needed -->
+      <div class="post-card border rounded-2xl p-6 shadow-sm bg-white">
+        <div class="aspect-w-16 aspect-h-9 mb-4">
+          <img src="https://via.placeholder.com/400x225" alt="Post thumbnail" class="rounded-lg object-cover w-full h-48">
+        </div>
+        <span class="text-sm text-[#0284c7] font-semibold">Remote Work</span>
+        <h3 class="text-xl font-bold my-2">Setting Up Your Digital Office</h3>
+        <p class="mb-4">Essential tools and practices for remote work success.</p>
+        <button class="text-[#0d9488] font-semibold hover:underline">Read More</button>
+      </div>
+      <div class="post-card border rounded-2xl p-6 shadow-sm bg-white">
+        <div class="aspect-w-16 aspect-h-9 mb-4">
+          <img src="https://via.placeholder.com/400x225" alt="Post thumbnail" class="rounded-lg object-cover w-full h-48">
+        </div>
+        <span class="text-sm text-[#0284c7] font-semibold">Travel</span>
+        <h3 class="text-xl font-bold my-2">Digital Nomad Destinations 2024</h3>
+        <p class="mb-4">Top cities for remote workers this year.</p>
+        <button class="text-[#0d9488] font-semibold hover:underline">Read More</button>
+      </div>
+      <div class="post-card border rounded-2xl p-6 shadow-sm bg-white">
+        <div class="aspect-w-16 aspect-h-9 mb-4">
+          <img src="https://via.placeholder.com/400x225" alt="Post thumbnail" class="rounded-lg object-cover w-full h-48">
+        </div>
+        <span class="text-sm text-[#0284c7] font-semibold">Finance</span>
+        <h3 class="text-xl font-bold my-2">Tax Strategies for Nomads</h3>
+        <p class="mb-4">Understanding international tax implications.</p>
+        <button class="text-[#0d9488] font-semibold hover:underline">Read More</button>
+      </div>
+      <div class="post-card border rounded-2xl p-6 shadow-sm bg-white">
+        <div class="aspect-w-16 aspect-h-9 mb-4">
+          <img src="https://via.placeholder.com/400x225" alt="Post thumbnail" class="rounded-lg object-cover w-full h-48">
+        </div>
+        <span class="text-sm text-[#0284c7] font-semibold">Lifestyle</span>
+        <h3 class="text-xl font-bold my-2">Building Community on the Road</h3>
+        <p class="mb-4">Connecting with fellow digital nomads worldwide.</p>
+        <button class="text-[#0d9488] font-semibold hover:underline">Read More</button>
+      </div>
+      <div class="post-card border rounded-2xl p-6 shadow-sm bg-white">
+        <div class="aspect-w-16 aspect-h-9 mb-4">
+          <img src="https://via.placeholder.com/400x225" alt="Post thumbnail" class="rounded-lg object-cover w-full h-48">
+        </div>
+        <span class="text-sm text-[#0284c7] font-semibold">Technology</span>
+        <h3 class="text-xl font-bold my-2">Essential Digital Security</h3>
+        <p class="mb-4">Staying safe while working remotely.</p>
+        <button class="text-[#0d9488] font-semibold hover:underline">Read More</button>
+      </div>
     </div>
     <div class="text-center mt-8 space-y-4">
       <button id="loadMoreBtn" class="bg-[#0284c7] text-white px-6 py-2 rounded-full font-bold hover:opacity-90 transition">Load More Posts</button>
