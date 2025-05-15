@@ -211,7 +211,7 @@ function attachModalHandlers() {
                     <h2 class="text-2xl font-bold mb-4">${title}</h2>
                     <div class="prose max-w-none">
                         <p class="text-gray-600 mb-6">${description}</p>
-                        <div class="modal-article">
+                        <div class="modal-article prose prose-lg max-w-none">
                             ${content}
                         </div>
                     </div>
