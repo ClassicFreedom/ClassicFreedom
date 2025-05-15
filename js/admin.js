@@ -267,30 +267,152 @@ function deletePost(postId) {
     }
 }
 
-postForm.addEventListener('submit', (e) => {
+// Function to handle image upload and conversion
+function handleImageUpload(file) {
+    return new Promise((resolve, reject) => {
+        if (!file) {
+            resolve(null);
+            return;
+        }
+
+        // Check if file is an image
+        if (!file.type.startsWith('image/')) {
+            alert('Please upload an image file');
+            reject('Not an image file');
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            // Create an image element to check dimensions
+            const img = new Image();
+            img.onload = function() {
+                // Create a canvas to potentially resize the image
+                const canvas = document.createElement('canvas');
+                let width = img.width;
+                let height = img.height;
+
+                // If image is too large, resize it
+                const MAX_WIDTH = 1200;
+                if (width > MAX_WIDTH) {
+                    height = Math.round((height * MAX_WIDTH) / width);
+                    width = MAX_WIDTH;
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+
+                // Draw and export the image
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+                
+                // Convert to webp if supported
+                try {
+                    const webpData = canvas.toDataURL('image/webp', 0.8);
+                    resolve(webpData);
+                } catch (err) {
+                    // Fallback to PNG if webp is not supported
+                    const pngData = canvas.toDataURL('image/png', 0.8);
+                    resolve(pngData);
+                }
+            };
+            img.onerror = function() {
+                reject('Error loading image');
+            };
+            img.src = e.target.result;
+        };
+        reader.onerror = function() {
+            reject('Error reading file');
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
+// Update post form to handle image upload
+postForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     
-    const posts = JSON.parse(safeLocalStorage('get', 'posts') || '[]');
-    const newPost = {
-        id: editingPostId || Date.now(),
-        title: document.getElementById('postTitle').value.trim(),
-        category: document.getElementById('postCategory').value.trim(),
-        description: document.getElementById('postDescription').value.trim(),
-        link: document.getElementById('postLink').value.trim(),
-        date: document.getElementById('postDate').value || new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
-    };
+    try {
+        const thumbnailInput = document.getElementById('postThumbnail');
+        const file = thumbnailInput.files[0];
+        let thumbnail = null;
 
-    if (editingPostId) {
-        const index = posts.findIndex(p => p.id === editingPostId);
-        if (index !== -1) {
-            posts[index] = { ...posts[index], ...newPost };
+        if (file) {
+            thumbnail = await handleImageUpload(file);
         }
-    } else {
-        posts.push(newPost);
-    }
 
-    savePosts(posts);
-    showPostForm(false);
+        const posts = JSON.parse(safeLocalStorage('get', 'posts') || '[]');
+        const newPost = {
+            id: editingPostId || Date.now(),
+            title: document.getElementById('postTitle').value.trim(),
+            category: document.getElementById('postCategory').value.trim(),
+            description: document.getElementById('postDescription').value.trim(),
+            link: document.getElementById('postLink').value.trim(),
+            date: document.getElementById('postDate').value || new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
+            thumbnail: thumbnail || (editingPostId ? posts.find(p => p.id === editingPostId)?.thumbnail : null) || 'https://via.placeholder.com/400x225'
+        };
+
+        if (editingPostId) {
+            const index = posts.findIndex(p => p.id === editingPostId);
+            if (index !== -1) {
+                posts[index] = { ...posts[index], ...newPost };
+            }
+        } else {
+            posts.push(newPost);
+        }
+
+        savePosts(posts);
+        showPostForm(false);
+    } catch (error) {
+        console.error('Error handling image:', error);
+        alert('There was an error processing the image. Please try again.');
+    }
+});
+
+// Add image preview functionality
+document.addEventListener('DOMContentLoaded', () => {
+    checkLoginStatus();
+    
+    // Add date field and set up image preview
+    const postForm = document.getElementById('postForm');
+    if (postForm) {
+        // Update file input to accept webp
+        const thumbnailInput = document.getElementById('postThumbnail');
+        const thumbnailPreview = document.getElementById('thumbnailPreview');
+        const previewImg = thumbnailPreview?.querySelector('img');
+
+        if (thumbnailInput && thumbnailPreview && previewImg) {
+            thumbnailInput.accept = "image/webp,image/png,image/jpeg,image/gif";
+            
+            // Handle file selection for preview
+            thumbnailInput.addEventListener('change', async (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    try {
+                        const preview = await handleImageUpload(file);
+                        previewImg.src = preview;
+                        thumbnailPreview.classList.remove('hidden');
+                    } catch (error) {
+                        console.error('Error previewing image:', error);
+                        thumbnailPreview.classList.add('hidden');
+                    }
+                } else {
+                    thumbnailPreview.classList.add('hidden');
+                }
+            });
+        }
+
+        if (!document.getElementById('postDate')) {
+            const dateField = document.createElement('div');
+            dateField.innerHTML = `
+                <label class="block text-sm font-medium mb-1" for="postDate">Publication Date</label>
+                <input type="text" id="postDate" class="w-full px-3 py-2 border rounded-lg" placeholder="e.g., March 27, 2024">
+            `;
+            // Insert before the Link field
+            const linkField = document.querySelector('label[for="postLink"]').parentElement;
+            linkField.parentElement.insertBefore(dateField, linkField);
+        }
+    }
 });
 
 // Social Media Management
