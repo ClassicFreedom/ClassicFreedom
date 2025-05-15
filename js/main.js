@@ -193,15 +193,26 @@ function attachModalHandlers() {
             const category = card.querySelector('span').textContent;
             const description = card.querySelector('p').textContent;
             const image = card.querySelector('img').src;
+            
+            // Get the post data from localStorage to access full content
+            const posts = JSON.parse(localStorage.getItem('posts') || '[]');
+            const post = posts.find(p => p.title === title) || {};
+            const content = post.content || description; // Fallback to description if no content
 
-            // Populate modal content
+            // Populate modal content with full article
             modalContent.innerHTML = `
                 <div class="mb-6">
                     <img src="${image}" alt="${title}" class="w-full rounded-lg mb-4">
-                    <span class="text-sm text-[#0284c7] font-semibold">${category}</span>
-                    <h2 class="text-2xl font-bold my-2">${title}</h2>
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-sm text-[#0284c7] font-semibold">${category}</span>
+                        <span class="text-sm text-gray-500">${post.date || ''}</span>
+                    </div>
+                    <h2 class="text-2xl font-bold mb-4">${title}</h2>
                     <div class="prose max-w-none">
-                        <p>${description}</p>
+                        <p class="text-gray-600 mb-6">${description}</p>
+                        <div class="modal-article">
+                            ${content}
+                        </div>
                     </div>
                 </div>
             `;
