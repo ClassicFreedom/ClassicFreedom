@@ -109,9 +109,13 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="aspect-w-16 aspect-h-9 mb-4">
                             <img src="${post.thumbnail || 'https://via.placeholder.com/400x225'}" alt="${post.title}" class="rounded-lg object-cover w-full h-48">
                         </div>
-                        <span class="text-sm text-[#0284c7] font-semibold">${post.category}</span>
+                        <div class="flex items-center gap-2">
+                            <span class="text-sm text-[#0284c7] font-semibold">${post.category}</span>
+                            <span class="text-sm text-gray-500">${post.date || ''}</span>
+                        </div>
                         <h3 class="text-xl font-bold my-2">${post.title}</h3>
                         <p class="mb-4">${post.description}</p>
+                        <div class="hidden post-content">${post.content || ''}</div>
                         <button class="text-[#0d9488] font-semibold hover:underline">Read More</button>
                     </div>
                 `).join('');
@@ -193,11 +197,8 @@ function attachModalHandlers() {
             const category = card.querySelector('span').textContent;
             const description = card.querySelector('p').textContent;
             const image = card.querySelector('img').src;
-            
-            // Get the post data from localStorage to access full content
-            const posts = JSON.parse(localStorage.getItem('posts') || '[]');
-            const post = posts.find(p => p.title === title) || {};
-            const content = post.content || description; // Fallback to description if no content
+            const content = card.querySelector('.post-content').innerHTML;
+            const date = card.querySelector('.text-gray-500').textContent;
 
             // Populate modal content with full article
             modalContent.innerHTML = `
@@ -205,7 +206,7 @@ function attachModalHandlers() {
                     <img src="${image}" alt="${title}" class="w-full rounded-lg mb-4">
                     <div class="flex items-center gap-2 mb-2">
                         <span class="text-sm text-[#0284c7] font-semibold">${category}</span>
-                        <span class="text-sm text-gray-500">${post.date || ''}</span>
+                        <span class="text-sm text-gray-500">${date}</span>
                     </div>
                     <h2 class="text-2xl font-bold mb-4">${title}</h2>
                     <div class="prose max-w-none">
