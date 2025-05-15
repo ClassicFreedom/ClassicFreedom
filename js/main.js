@@ -1,6 +1,8 @@
 // Form submission handling
 document.addEventListener('DOMContentLoaded', () => {
     const forms = document.querySelectorAll('form');
+    let currentPage = 1;
+    const postsPerPage = 6;
     
     forms.forEach(form => {
         form.addEventListener('submit', async (e) => {
@@ -69,19 +71,47 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const postsContainer = document.querySelector('.grid');
+            const loadMoreBtn = document.querySelector('#loadMoreBtn');
+            
             if (postsContainer && posts && posts.length > 0) {
-                postsContainer.innerHTML = posts.map(post => `
-                    <div class="border rounded-2xl p-6 shadow-sm">
+                // Calculate pagination
+                const start = 0;
+                const end = currentPage * postsPerPage;
+                const hasMorePosts = posts.length > end;
+                
+                // Update load more button visibility
+                if (loadMoreBtn) {
+                    loadMoreBtn.style.display = hasMorePosts ? 'block' : 'none';
+                }
+
+                // Display posts
+                postsContainer.innerHTML = posts.slice(start, end).map(post => `
+                    <div class="post-card border rounded-2xl p-6 shadow-sm bg-white">
+                        <div class="aspect-w-16 aspect-h-9 mb-4">
+                            <img src="${post.thumbnail || 'https://via.placeholder.com/400x225'}" alt="${post.title}" class="rounded-lg object-cover w-full h-48">
+                        </div>
                         <span class="text-sm text-[#0284c7] font-semibold">${post.category}</span>
                         <h3 class="text-xl font-bold my-2">${post.title}</h3>
                         <p class="mb-4">${post.description}</p>
-                        ${post.link ? `<a href="${post.link}" target="_blank" rel="noopener noreferrer" class="text-[#0d9488] font-semibold hover:underline">Read More</a>` : ''}
+                        <button class="text-[#0d9488] font-semibold hover:underline">Read More</button>
                     </div>
                 `).join('');
+
+                // Reattach click handlers for modals
+                attachModalHandlers();
             }
         } catch (error) {
             console.error('Error updating posts:', error);
         }
+    }
+
+    // Load More functionality
+    const loadMoreBtn = document.querySelector('#loadMoreBtn');
+    if (loadMoreBtn) {
+        loadMoreBtn.addEventListener('click', () => {
+            currentPage++;
+            updatePosts();
+        });
     }
 
     // Initial load of content
@@ -97,6 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.addEventListener('postsUpdated', (event) => {
         if (event.detail) {
+            currentPage = 1; // Reset to first page when posts are updated
             updatePosts(event.detail);
         }
     });
@@ -135,28 +166,29 @@ window.onclick = (event) => {
     }
 };
 
-// Handle post card clicks
-document.querySelectorAll('.post-card').forEach(card => {
-    card.addEventListener('click', () => {
-        const title = card.querySelector('h3').textContent;
-        const category = card.querySelector('span').textContent;
-        const description = card.querySelector('p').textContent;
-        const image = card.querySelector('img').src;
+// Function to attach modal handlers
+function attachModalHandlers() {
+    document.querySelectorAll('.post-card').forEach(card => {
+        card.addEventListener('click', () => {
+            const title = card.querySelector('h3').textContent;
+            const category = card.querySelector('span').textContent;
+            const description = card.querySelector('p').textContent;
+            const image = card.querySelector('img').src;
 
-        // Populate modal content
-        modalContent.innerHTML = `
-            <div class="mb-6">
-                <img src="${image}" alt="${title}" class="w-full rounded-lg mb-4">
-                <span class="text-sm text-[#0284c7] font-semibold">${category}</span>
-                <h2 class="text-2xl font-bold my-2">${title}</h2>
-                <div class="prose max-w-none">
-                    <p>${description}</p>
-                    <!-- Add more content here as needed -->
+            // Populate modal content
+            modalContent.innerHTML = `
+                <div class="mb-6">
+                    <img src="${image}" alt="${title}" class="w-full rounded-lg mb-4">
+                    <span class="text-sm text-[#0284c7] font-semibold">${category}</span>
+                    <h2 class="text-2xl font-bold my-2">${title}</h2>
+                    <div class="prose max-w-none">
+                        <p>${description}</p>
+                    </div>
                 </div>
-            </div>
-        `;
+            `;
 
-        // Show modal
-        modal.style.display = 'block';
+            // Show modal
+            modal.style.display = 'block';
+        });
     });
-}); 
+} 
