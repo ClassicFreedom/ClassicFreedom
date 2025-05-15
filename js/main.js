@@ -201,6 +201,13 @@ function attachModalHandlers() {
             const date = card.querySelector('.text-gray-500').textContent;
 
             // Populate modal content with full article
+            const processedContent = content
+                .replace(/\n\n/g, '</p><p>') // Convert double newlines to paragraphs
+                .replace(/\n/g, '<br>') // Convert single newlines to line breaks
+                .replace(/#{3}\s*(.*?)\s*$/gm, '<h3 class="text-xl font-bold mt-6 mb-3">$1</h3>') // h3 tags
+                .replace(/#{2}\s*(.*?)\s*$/gm, '<h2 class="text-2xl font-bold mt-8 mb-4">$1</h2>') // h2 tags
+                .replace(/#{1}\s*(.*?)\s*$/gm, '<h1 class="text-3xl font-bold mt-10 mb-5">$1</h1>'); // h1 tags
+
             modalContent.innerHTML = `
                 <div class="mb-6">
                     <img src="${image}" alt="${title}" class="w-full rounded-lg mb-4">
@@ -212,7 +219,7 @@ function attachModalHandlers() {
                     <div class="prose max-w-none">
                         <p class="text-gray-600 mb-6">${description}</p>
                         <div class="modal-article prose prose-lg max-w-none">
-                            ${content}
+                            <p>${processedContent}</p>
                         </div>
                     </div>
                 </div>
