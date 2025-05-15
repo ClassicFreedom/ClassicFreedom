@@ -252,6 +252,7 @@ function editPost(post) {
     document.getElementById('postTitle').value = post.title;
     document.getElementById('postCategory').value = post.category;
     document.getElementById('postDescription').value = post.description;
+    document.getElementById('postContent').value = post.content || '';
     document.getElementById('postLink').value = post.link || '';
     if (document.getElementById('postDate')) {
         document.getElementById('postDate').value = post.date || '';
@@ -347,6 +348,7 @@ postForm.addEventListener('submit', async (e) => {
             title: document.getElementById('postTitle').value.trim(),
             category: document.getElementById('postCategory').value.trim(),
             description: document.getElementById('postDescription').value.trim(),
+            content: document.getElementById('postContent').value.trim(),
             link: document.getElementById('postLink').value.trim(),
             date: document.getElementById('postDate').value || new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
             thumbnail: thumbnail || (editingPostId ? posts.find(p => p.id === editingPostId)?.thumbnail : null) || 'https://via.placeholder.com/400x225'
