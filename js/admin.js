@@ -137,6 +137,7 @@ function createPostElement(post) {
         <div class="flex-1">
             <div class="flex items-center gap-2 mb-2">
                 <span class="text-sm text-[#0284c7] font-semibold">${post.category}</span>
+                <span class="text-sm text-gray-500">${post.date || 'No date'}</span>
             </div>
             <h3 class="text-xl font-bold">${post.title}</h3>
             <p class="text-gray-600 mt-1">${post.description}</p>
@@ -155,19 +156,70 @@ function createPostElement(post) {
 }
 
 function loadPosts() {
-    const posts = JSON.parse(safeLocalStorage('get', 'posts') || '[]');
-    postsList.innerHTML = '';
+    let posts = JSON.parse(safeLocalStorage('get', 'posts') || '[]');
     
+    // If no posts exist, create placeholder posts
     if (posts.length === 0) {
-        const emptyState = document.createElement('div');
-        emptyState.className = 'text-center py-8 text-gray-500';
-        emptyState.innerHTML = 'No posts yet. Click "Add New Post" to create your first post.';
-        postsList.appendChild(emptyState);
-    } else {
-        posts.forEach(post => {
-            postsList.appendChild(createPostElement(post));
-        });
+        const placeholderPosts = [
+            {
+                id: Date.now(),
+                title: "Mastering Bitcoin for Daily Use",
+                category: "Crypto",
+                description: "A quick-start guide for using crypto as a digital nomad.",
+                date: "March 27, 2024",
+                thumbnail: "https://via.placeholder.com/400x225"
+            },
+            {
+                id: Date.now() + 1,
+                title: "Setting Up Your Digital Office",
+                category: "Remote Work",
+                description: "Essential tools and practices for remote work success.",
+                date: "March 20, 2024",
+                thumbnail: "https://via.placeholder.com/400x225"
+            },
+            {
+                id: Date.now() + 2,
+                title: "Digital Nomad Destinations 2024",
+                category: "Travel",
+                description: "Top cities for remote workers this year.",
+                date: "March 13, 2024",
+                thumbnail: "https://via.placeholder.com/400x225"
+            },
+            {
+                id: Date.now() + 3,
+                title: "Tax Strategies for Nomads",
+                category: "Finance",
+                description: "Understanding international tax implications.",
+                date: "March 6, 2024",
+                thumbnail: "https://via.placeholder.com/400x225"
+            },
+            {
+                id: Date.now() + 4,
+                title: "Building Community on the Road",
+                category: "Lifestyle",
+                description: "Connecting with fellow digital nomads worldwide.",
+                date: "February 28, 2024",
+                thumbnail: "https://via.placeholder.com/400x225"
+            },
+            {
+                id: Date.now() + 5,
+                title: "Essential Digital Security",
+                category: "Technology",
+                description: "Staying safe while working remotely.",
+                date: "February 21, 2024",
+                thumbnail: "https://via.placeholder.com/400x225"
+            }
+        ];
+        
+        // Save placeholder posts
+        safeLocalStorage('set', 'posts', JSON.stringify(placeholderPosts));
+        posts = placeholderPosts;
     }
+
+    postsList.innerHTML = '';
+    posts.forEach(post => {
+        postsList.appendChild(createPostElement(post));
+    });
 }
 
 function savePosts(posts) {
@@ -201,6 +253,9 @@ function editPost(post) {
     document.getElementById('postCategory').value = post.category;
     document.getElementById('postDescription').value = post.description;
     document.getElementById('postLink').value = post.link || '';
+    if (document.getElementById('postDate')) {
+        document.getElementById('postDate').value = post.date || '';
+    }
     showPostForm(true);
 }
 
@@ -221,13 +276,14 @@ postForm.addEventListener('submit', (e) => {
         title: document.getElementById('postTitle').value.trim(),
         category: document.getElementById('postCategory').value.trim(),
         description: document.getElementById('postDescription').value.trim(),
-        link: document.getElementById('postLink').value.trim()
+        link: document.getElementById('postLink').value.trim(),
+        date: document.getElementById('postDate').value || new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
     };
 
     if (editingPostId) {
         const index = posts.findIndex(p => p.id === editingPostId);
         if (index !== -1) {
-            posts[index] = newPost;
+            posts[index] = { ...posts[index], ...newPost };
         }
     } else {
         posts.push(newPost);
@@ -297,4 +353,19 @@ socialLinksForm.addEventListener('submit', async (e) => {
 });
 
 // Initialize the page
-checkLoginStatus(); 
+document.addEventListener('DOMContentLoaded', () => {
+    checkLoginStatus();
+    
+    // Add date field to post form if it doesn't exist
+    const postForm = document.getElementById('postForm');
+    if (postForm && !document.getElementById('postDate')) {
+        const dateField = document.createElement('div');
+        dateField.innerHTML = `
+            <label class="block text-sm font-medium mb-1" for="postDate">Publication Date</label>
+            <input type="text" id="postDate" class="w-full px-3 py-2 border rounded-lg" placeholder="e.g., March 27, 2024">
+        `;
+        // Insert before the Link field
+        const linkField = document.querySelector('label[for="postLink"]').parentElement;
+        linkField.parentElement.insertBefore(dateField, linkField);
+    }
+}); 
