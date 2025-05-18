@@ -89,22 +89,34 @@ export default function Admin() {
       </header>
 
       <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8 space-y-6">
-        {/* Settings Section */}
+        {/* Calendly Settings Section */}
         <div className="bg-white shadow rounded-lg">
           <div className="px-4 py-5 sm:p-6">
-            <h2 className="text-lg font-medium text-gray-900 mb-4">Site Settings</h2>
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h2 className="text-xl font-bold text-gray-900">Freedom Consulting Settings</h2>
+                <p className="mt-1 text-sm text-gray-500">
+                  Configure your Calendly link for consultation bookings. Make sure your Calendly is set up with Stripe integration for payments.
+                </p>
+              </div>
+            </div>
             <form onSubmit={handleSettingsSave} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  Calendly Link
+                  Calendly Consultation Link
                 </label>
-                <input
-                  type="url"
-                  value={settings.calendlyLink}
-                  onChange={(e) => setSettings({ ...settings, calendlyLink: e.target.value })}
-                  placeholder="https://calendly.com/your-link"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500"
-                />
+                <div className="mt-1">
+                  <input
+                    type="url"
+                    value={settings.calendlyLink}
+                    onChange={(e) => setSettings({ ...settings, calendlyLink: e.target.value })}
+                    placeholder="https://calendly.com/your-link"
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500"
+                  />
+                  <p className="mt-2 text-sm text-gray-500">
+                    Enter your Calendly link where clients can book consultations. This will be displayed as a prominent button on your website.
+                  </p>
+                </div>
               </div>
               {settingsError && (
                 <div className="text-red-600 text-sm">{settingsError}</div>

@@ -89,8 +89,27 @@ export default function Home() {
       </header>
 
       <div className="relative">
+        {/* Left Sidebar - Consulting Button */}
+        <div className="fixed top-[100px] left-4 w-[300px]">
+          {settings.calendlyLink && (
+            <div className="bg-white rounded-lg shadow-lg p-6 text-center">
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">Freedom Consulting</h2>
+              <p className="text-gray-600 mb-4">Book a call now</p>
+              <a
+                href={settings.calendlyLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block w-full bg-teal-600 text-white rounded-lg py-4 px-6 text-lg font-semibold hover:bg-teal-700 transition-colors"
+              >
+                <FontAwesomeIcon icon={faCalendar} className="mr-2" />
+                Schedule Consultation
+              </a>
+            </div>
+          )}
+        </div>
+
         {/* Main Content */}
-        <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8 pr-[350px]">
+        <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8 pl-[350px] pr-[350px]">
           {isLoading ? (
             <div className="flex justify-center items-center min-h-[400px]">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-600"></div>
@@ -114,25 +133,11 @@ export default function Home() {
           )}
         </main>
 
-        {/* Right Sidebar */}
-        <div className="fixed top-[100px] right-4 w-[300px] space-y-4">
-          {/* Beehive Email Embed */}
-          <div className="bg-white rounded-lg shadow-lg p-4">
+        {/* Right Sidebar - Newsletter */}
+        <div className="fixed top-[100px] right-4 w-[300px]">
+          <div className="bg-white rounded-lg shadow-lg p-6">
             <div id="beehiiv-embed"></div>
           </div>
-
-          {/* Calendly Button */}
-          {settings.calendlyLink && (
-            <a
-              href={settings.calendlyLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block w-full bg-teal-600 text-white rounded-lg shadow-lg p-4 text-center hover:bg-teal-700 transition-colors"
-            >
-              <FontAwesomeIcon icon={faCalendar} className="mr-2" />
-              Lifestyle Consulting
-            </a>
-          )}
         </div>
       </div>
 
