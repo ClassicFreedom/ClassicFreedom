@@ -8,7 +8,7 @@ const PostCard = ({ post, onClick }) => {
     >
       <div className="relative h-48 w-full">
         <img
-          src={post.imageUrl || '/images/default-thumbnail.jpg'}
+          src={post.thumbnail || '/images/default-thumbnail.jpg'}
           alt={post.title}
           className="w-full h-48 object-cover rounded-lg"
         />
