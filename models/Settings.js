@@ -9,7 +9,7 @@ const SettingsSchema = new mongoose.Schema({
   defaultThumbnail: {
     type: String,
     required: [true, 'Please provide a default thumbnail URL'],
-    default: 'https://via.placeholder.com/400x225'
+    default: '/images/default-thumbnail.jpg'
   },
   lastUpdated: {
     type: Date,

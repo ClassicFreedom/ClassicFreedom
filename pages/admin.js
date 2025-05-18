@@ -154,7 +154,7 @@ export default function Admin() {
                   alt="Default thumbnail preview"
                   className="w-[200px] h-[112px] object-cover rounded-lg border"
                   onError={(e) => {
-                    e.target.src = 'https://via.placeholder.com/400x225';
+                    e.target.src = '/images/default-thumbnail.jpg';
                     e.target.alt = 'Invalid image URL';
                   }}
                 />

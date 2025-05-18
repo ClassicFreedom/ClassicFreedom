@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const forms = document.querySelectorAll('form');
     let currentPage = 1;
     const postsPerPage = 6;
-    let defaultThumbnail = 'https://via.placeholder.com/400x225'; // Default fallback
+    let defaultThumbnail = '/images/default-thumbnail.jpg'; // Default fallback
     
     // Fetch settings
     async function fetchSettings() {

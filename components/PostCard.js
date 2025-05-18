@@ -7,11 +7,10 @@ const PostCard = ({ post, onClick }) => {
       onClick={() => onClick(post)}
     >
       <div className="relative h-48 w-full">
-        <Image
-          src={post.imageUrl || '/images/placeholder.jpg'}
+        <img
+          src={post.imageUrl || '/images/default-thumbnail.jpg'}
           alt={post.title}
-          layout="fill"
-          objectFit="cover"
+          className="w-full h-48 object-cover rounded-lg"
         />
       </div>
       <div className="p-4">
