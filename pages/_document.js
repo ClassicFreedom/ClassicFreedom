@@ -11,22 +11,6 @@ export default function Document() {
           rel="stylesheet"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        {/* Add your beehive embed script here */}
-        <script 
-          data-beehive-id="YOUR_BEEHIVE_ID" 
-          src="https://embed.beehiiv.com/v2/embed.js" 
-          async
-        />
-        <style dangerouslySetInnerHTML={{ __html: `
-          /* Custom styling for beehive embed */
-          #beehiiv-embed {
-            width: 100% !important;
-            max-width: none !important;
-          }
-          #beehiiv-embed iframe {
-            width: 100% !important;
-          }
-        `}} />
       </Head>
       <body>
         <Main />

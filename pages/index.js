@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import Head from 'next/head';
 import PostCard from '../components/PostCard';
+import BeehiveEmbed from '../components/BeehiveEmbed';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGithub, faTwitter, faLinkedin } from '@fortawesome/free-brands-svg-icons';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
@@ -142,7 +143,7 @@ export default function Home() {
         {/* Right Sidebar - Newsletter */}
         <div className="fixed top-[100px] right-4 w-[300px]">
           <div className="bg-white rounded-lg shadow-lg p-6">
-            <div id="beehiiv-embed"></div>
+            <BeehiveEmbed />
           </div>
         </div>
       </div>
