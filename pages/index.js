@@ -12,6 +12,8 @@ export default function Home() {
   const [error, setError] = useState('');
   const [settings, setSettings] = useState({ calendlyLink: '' });
 
+  console.log('Home page loaded - Version 2.0');
+
   const fetchPosts = useCallback(async () => {
     try {
       setIsLoading(true);
