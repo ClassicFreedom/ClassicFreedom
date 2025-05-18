@@ -2,11 +2,12 @@
   "name": "classicfreedom",
   "version": "1.0.0",
   "description": "ClassicFreedom website",
-  "main": "index.js",
+  "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "lint": "next lint"
   },
   "dependencies": {
     "formidable": "^3.5.1",
@@ -22,5 +23,8 @@
     "@fortawesome/free-solid-svg-icons": "^6.5.1",
     "@fortawesome/free-brands-svg-icons": "^6.5.1",
     "@fortawesome/react-fontawesome": "^0.2.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 } 
