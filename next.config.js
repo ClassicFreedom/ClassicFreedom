@@ -9,6 +9,9 @@ const nextConfig = {
     config.resolve.fallback = { fs: false };
     return config;
   },
+  output: 'standalone',
+  poweredByHeader: false,
+  compress: true
 }
 
 module.exports = nextConfig 

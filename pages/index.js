@@ -2,7 +2,8 @@ import { useState, useEffect, useCallback } from 'react';
 import Head from 'next/head';
 import PostCard from '../components/PostCard';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGithub, faTwitter, faLinkedin, faCalendar } from '@fortawesome/free-brands-svg-icons';
+import { faGithub, faTwitter, faLinkedin } from '@fortawesome/free-brands-svg-icons';
+import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 
 export default function Home() {
   const [posts, setPosts] = useState([]);

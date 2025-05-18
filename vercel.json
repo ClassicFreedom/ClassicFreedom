@@ -7,5 +7,17 @@
     "NEXT_PUBLIC_ADMIN_USERNAME": "@admin_username",
     "NEXT_PUBLIC_ADMIN_PASSWORD": "@admin_password",
     "MONGODB_URI": "@mongodb_uri"
-  }
+  },
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/next"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/"
+    }
+  ]
 } 
