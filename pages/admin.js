@@ -117,9 +117,8 @@ export default function Admin() {
                 name="calendlyLink"
                 value={settings.calendlyLink}
                 onChange={(e) => setSettings({ ...settings, calendlyLink: e.target.value })}
-                placeholder="https://calendly.com/your-link"
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 text-base"
-                aria-describedby="calendly-link-description"
+                placeholder="Enter your Calendly link"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 sm:text-sm"
               />
             </div>
             <p id="calendly-link-description" className="mt-2 text-sm text-gray-500">
@@ -138,8 +137,8 @@ export default function Admin() {
                 name="defaultThumbnail"
                 value={settings.defaultThumbnail}
                 onChange={(e) => setSettings({ ...settings, defaultThumbnail: e.target.value })}
-                placeholder="https://example.com/default-image.jpg"
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 text-base"
+                placeholder="Enter image URL for default thumbnail"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 sm:text-sm"
                 aria-describedby="default-thumbnail-description"
               />
             </div>

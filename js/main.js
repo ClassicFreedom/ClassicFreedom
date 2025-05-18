@@ -90,17 +90,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const loadMoreBtn = document.querySelector('#loadMoreBtn');
             
             if (postsContainer) {
-                // Get existing placeholder posts
-                const placeholderPosts = Array.from(postsContainer.children).map(post => ({
-                    isPlaceholder: true,
-                    category: post.querySelector('span').textContent,
-                    title: post.querySelector('h3').textContent,
-                    description: post.querySelector('p').textContent,
-                    thumbnail: post.querySelector('img').src
-                }));
-
-                // Calculate how many placeholders to show
-                const totalToShow = Math.max(6, posts.length);
                 const start = 0;
                 const end = currentPage * postsPerPage;
                 const hasMorePosts = posts.length > end;
@@ -110,35 +99,46 @@ document.addEventListener('DOMContentLoaded', () => {
                     loadMoreBtn.style.display = hasMorePosts ? 'block' : 'none';
                 }
 
-                // Combine real posts with placeholders if needed
-                let displayPosts = posts.slice(start, end);
-                if (displayPosts.length < 6) {
-                    const neededPlaceholders = 6 - displayPosts.length;
-                    displayPosts = [...displayPosts, ...placeholderPosts.slice(0, neededPlaceholders)];
+                // Display posts or empty state
+                if (posts.length === 0) {
+                    postsContainer.innerHTML = `
+                        <div class="col-span-full text-center py-8">
+                            <h3 class="text-xl font-semibold text-gray-600">No posts available yet</h3>
+                            <p class="text-gray-500 mt-2">Check back soon for new content!</p>
+                        </div>
+                    `;
+                } else {
+                    const displayPosts = posts.slice(start, end);
+                    postsContainer.innerHTML = displayPosts.map(post => `
+                        <div class="post-card border rounded-2xl p-6 shadow-sm bg-white">
+                            <div class="aspect-w-16 aspect-h-9 mb-4">
+                                <img src="${post.thumbnail || defaultThumbnail}" alt="${post.title}" class="rounded-lg object-cover w-full h-48">
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-sm text-[#0284c7] font-semibold">${post.category}</span>
+                                <span class="text-sm text-gray-500">${post.date || ''}</span>
+                            </div>
+                            <h3 class="text-xl font-bold my-2">${post.title}</h3>
+                            <p class="mb-4">${post.description}</p>
+                            <div class="hidden post-content">${post.content || ''}</div>
+                            <button class="text-[#0d9488] font-semibold hover:underline">Read More</button>
+                        </div>
+                    `).join('');
                 }
-
-                // Display posts
-                postsContainer.innerHTML = displayPosts.map(post => `
-                    <div class="post-card border rounded-2xl p-6 shadow-sm bg-white">
-                        <div class="aspect-w-16 aspect-h-9 mb-4">
-                            <img src="${post.thumbnail || defaultThumbnail}" alt="${post.title}" class="rounded-lg object-cover w-full h-48">
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <span class="text-sm text-[#0284c7] font-semibold">${post.category}</span>
-                            <span class="text-sm text-gray-500">${post.date || ''}</span>
-                        </div>
-                        <h3 class="text-xl font-bold my-2">${post.title}</h3>
-                        <p class="mb-4">${post.description}</p>
-                        <div class="hidden post-content">${post.content || ''}</div>
-                        <button class="text-[#0d9488] font-semibold hover:underline">Read More</button>
-                    </div>
-                `).join('');
 
                 // Reattach click handlers for modals
                 attachModalHandlers();
             }
         } catch (error) {
             console.error('Error updating posts:', error);
+            if (postsContainer) {
+                postsContainer.innerHTML = `
+                    <div class="col-span-full text-center py-8">
+                        <h3 class="text-xl font-semibold text-red-600">Error loading posts</h3>
+                        <p class="text-gray-500 mt-2">Please try again later.</p>
+                    </div>
+                `;
+            }
         }
     }
 

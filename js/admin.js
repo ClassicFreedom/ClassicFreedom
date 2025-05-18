@@ -121,7 +121,11 @@ adminLoginForm.addEventListener('submit', (e) => {
 
 // Handle logout
 logoutBtn.addEventListener('click', () => {
+    // Clear all stored data
     safeLocalStorage('remove', 'adminLoggedIn');
+    safeLocalStorage('remove', 'posts');
+    safeLocalStorage('remove', 'socialLinks');
+    
     checkLoginStatus();
     loginAttempts = 0;
     document.getElementById('username').value = '';
@@ -177,68 +181,19 @@ function createPostElement(post) {
 function loadPosts() {
     let posts = JSON.parse(safeLocalStorage('get', 'posts') || '[]');
     
-    // If no posts exist, create placeholder posts
-    if (posts.length === 0) {
-        const placeholderPosts = [
-            {
-                id: Date.now(),
-                title: "Mastering Bitcoin for Daily Use",
-                category: "Crypto",
-                description: "A quick-start guide for using crypto as a digital nomad.",
-                date: "March 27, 2024",
-                thumbnail: "images/posts/crypto-bitcoin.jpg"
-            },
-            {
-                id: Date.now() + 1,
-                title: "Setting Up Your Digital Office",
-                category: "Remote Work",
-                description: "Essential tools and practices for remote work success.",
-                date: "March 20, 2024",
-                thumbnail: "images/posts/remote-office.jpg"
-            },
-            {
-                id: Date.now() + 2,
-                title: "Digital Nomad Destinations 2024",
-                category: "Travel",
-                description: "Top cities for remote workers this year.",
-                date: "March 13, 2024",
-                thumbnail: "images/posts/nomad-destinations.jpg"
-            },
-            {
-                id: Date.now() + 3,
-                title: "Tax Strategies for Nomads",
-                category: "Finance",
-                description: "Understanding international tax implications.",
-                date: "March 6, 2024",
-                thumbnail: "images/posts/tax-strategy.jpg"
-            },
-            {
-                id: Date.now() + 4,
-                title: "Building Community on the Road",
-                category: "Lifestyle",
-                description: "Connecting with fellow digital nomads worldwide.",
-                date: "February 28, 2024",
-                thumbnail: "images/posts/community.jpg"
-            },
-            {
-                id: Date.now() + 5,
-                title: "Essential Digital Security",
-                category: "Technology",
-                description: "Staying safe while working remotely.",
-                date: "February 21, 2024",
-                thumbnail: "images/posts/default-thumbnail.jpg"
-            }
-        ];
-        
-        // Save placeholder posts
-        safeLocalStorage('set', 'posts', JSON.stringify(placeholderPosts));
-        posts = placeholderPosts;
-    }
-
     postsList.innerHTML = '';
-    posts.forEach(post => {
-        postsList.appendChild(createPostElement(post));
-    });
+    if (posts.length === 0) {
+        postsList.innerHTML = `
+            <div class="text-center py-8 bg-gray-50 rounded-lg">
+                <h3 class="text-xl font-semibold text-gray-600">No posts yet</h3>
+                <p class="text-gray-500 mt-2">Click "Add New Post" to create your first post</p>
+            </div>
+        `;
+    } else {
+        posts.forEach(post => {
+            postsList.appendChild(createPostElement(post));
+        });
+    }
 }
 
 function savePosts(posts) {
@@ -460,7 +415,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const dateField = document.createElement('div');
             dateField.innerHTML = `
                 <label class="block text-sm font-medium mb-1" for="postDate">Publication Date</label>
-                <input type="text" id="postDate" class="w-full px-3 py-2 border rounded-lg" placeholder="e.g., March 27, 2024">
+                <input type="text" id="postDate" class="w-full px-3 py-2 border rounded-lg" placeholder="Month DD, YYYY">
             `;
             // Insert before the Link field
             const linkField = document.querySelector('label[for="postLink"]').parentElement;
@@ -538,7 +493,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const dateField = document.createElement('div');
         dateField.innerHTML = `
             <label class="block text-sm font-medium mb-1" for="postDate">Publication Date</label>
-            <input type="text" id="postDate" class="w-full px-3 py-2 border rounded-lg" placeholder="e.g., March 27, 2024">
+            <input type="text" id="postDate" class="w-full px-3 py-2 border rounded-lg" placeholder="Month DD, YYYY">
         `;
         // Insert before the Link field
         const linkField = document.querySelector('label[for="postLink"]').parentElement;
