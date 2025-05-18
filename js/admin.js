@@ -1,6 +1,25 @@
-// Admin credentials - in a real app, these would be on the server
-const ADMIN_USER = "classicfreedom";
-const ADMIN_PASS = "primus1984";
+// Admin credentials from runtime config
+let ADMIN_USER, ADMIN_PASS;
+
+// Function to fetch runtime config
+async function loadConfig() {
+    try {
+        const response = await fetch('/_env');
+        const config = await response.json();
+        ADMIN_USER = config.NEXT_PUBLIC_ADMIN_USERNAME;
+        ADMIN_PASS = config.NEXT_PUBLIC_ADMIN_PASSWORD;
+    } catch (error) {
+        console.warn('Could not load runtime config, using development credentials');
+        ADMIN_USER = 'classicfreedom';
+        ADMIN_PASS = 'primus1984';
+    }
+}
+
+// Load config before initializing
+loadConfig().then(() => {
+    // Initialize the rest of the admin functionality
+    checkLoginStatus();
+});
 
 // DOM Elements
 const loginForm = document.getElementById('loginForm');
@@ -132,7 +151,7 @@ function createPostElement(post) {
     div.className = 'border rounded-lg p-4 flex items-start gap-4 bg-white';
     div.innerHTML = `
         <div class="w-24 h-24 flex-shrink-0">
-            <img src="${post.thumbnail || 'https://via.placeholder.com/100x100'}" alt="${post.title}" class="w-full h-full object-cover rounded">
+            <img src="${post.thumbnail || 'images/posts/default-thumbnail.jpg'}" alt="${post.title}" class="w-full h-full object-cover rounded">
         </div>
         <div class="flex-1">
             <div class="flex items-center gap-2 mb-2">
@@ -167,7 +186,7 @@ function loadPosts() {
                 category: "Crypto",
                 description: "A quick-start guide for using crypto as a digital nomad.",
                 date: "March 27, 2024",
-                thumbnail: "https://via.placeholder.com/400x225"
+                thumbnail: "images/posts/crypto-bitcoin.jpg"
             },
             {
                 id: Date.now() + 1,
@@ -175,7 +194,7 @@ function loadPosts() {
                 category: "Remote Work",
                 description: "Essential tools and practices for remote work success.",
                 date: "March 20, 2024",
-                thumbnail: "https://via.placeholder.com/400x225"
+                thumbnail: "images/posts/remote-office.jpg"
             },
             {
                 id: Date.now() + 2,
@@ -183,7 +202,7 @@ function loadPosts() {
                 category: "Travel",
                 description: "Top cities for remote workers this year.",
                 date: "March 13, 2024",
-                thumbnail: "https://via.placeholder.com/400x225"
+                thumbnail: "images/posts/nomad-destinations.jpg"
             },
             {
                 id: Date.now() + 3,
@@ -191,7 +210,7 @@ function loadPosts() {
                 category: "Finance",
                 description: "Understanding international tax implications.",
                 date: "March 6, 2024",
-                thumbnail: "https://via.placeholder.com/400x225"
+                thumbnail: "images/posts/tax-strategy.jpg"
             },
             {
                 id: Date.now() + 4,
@@ -199,7 +218,7 @@ function loadPosts() {
                 category: "Lifestyle",
                 description: "Connecting with fellow digital nomads worldwide.",
                 date: "February 28, 2024",
-                thumbnail: "https://via.placeholder.com/400x225"
+                thumbnail: "images/posts/community.jpg"
             },
             {
                 id: Date.now() + 5,
@@ -207,7 +226,7 @@ function loadPosts() {
                 category: "Technology",
                 description: "Staying safe while working remotely.",
                 date: "February 21, 2024",
-                thumbnail: "https://via.placeholder.com/400x225"
+                thumbnail: "images/posts/default-thumbnail.jpg"
             }
         ];
         
@@ -268,8 +287,8 @@ function deletePost(postId) {
     }
 }
 
-// Function to handle image upload and conversion
-function handleImageUpload(file) {
+// Function to handle image upload and save
+async function handleImageUpload(file) {
     return new Promise((resolve, reject) => {
         if (!file) {
             resolve(null);
@@ -306,16 +325,37 @@ function handleImageUpload(file) {
                 // Draw and export the image
                 const ctx = canvas.getContext('2d');
                 ctx.drawImage(img, 0, 0, width, height);
-                
-                // Convert to webp if supported
-                try {
-                    const webpData = canvas.toDataURL('image/webp', 0.8);
-                    resolve(webpData);
-                } catch (err) {
-                    // Fallback to PNG if webp is not supported
-                    const pngData = canvas.toDataURL('image/png', 0.8);
-                    resolve(pngData);
-                }
+
+                // Generate a unique filename
+                const timestamp = new Date().getTime();
+                const safeFileName = file.name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+                const filename = `image-${timestamp}-${safeFileName}`;
+                const filepath = `/images/posts/${filename}`;
+
+                // Convert to blob
+                canvas.toBlob(async (blob) => {
+                    try {
+                        // Create FormData and append the file
+                        const formData = new FormData();
+                        formData.append('image', blob, filename);
+
+                        // Upload the image to the server
+                        const response = await fetch('/api/upload', {
+                            method: 'POST',
+                            body: formData
+                        });
+
+                        if (!response.ok) {
+                            throw new Error('Failed to upload image');
+                        }
+
+                        // Return the public URL of the image
+                        resolve(filepath);
+                    } catch (error) {
+                        console.error('Error uploading image:', error);
+                        reject(error);
+                    }
+                }, file.type, 0.8);
             };
             img.onerror = function() {
                 reject('Error loading image');
@@ -326,6 +366,17 @@ function handleImageUpload(file) {
             reject('Error reading file');
         };
         reader.readAsDataURL(file);
+    });
+}
+
+// Function to load saved images
+function loadSavedImages() {
+    const savedImages = JSON.parse(localStorage.getItem('savedImages') || '{}');
+    Object.entries(savedImages).forEach(([path, data]) => {
+        // Find all img elements with this source
+        document.querySelectorAll(`img[src="${path}"]`).forEach(img => {
+            img.src = data;
+        });
     });
 }
 
@@ -351,7 +402,7 @@ postForm.addEventListener('submit', async (e) => {
             content: document.getElementById('postContent').value.trim(),
             link: document.getElementById('postLink').value.trim(),
             date: document.getElementById('postDate').value || new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
-            thumbnail: thumbnail || (editingPostId ? posts.find(p => p.id === editingPostId)?.thumbnail : null) || 'https://via.placeholder.com/400x225'
+            thumbnail: thumbnail || (editingPostId ? posts.find(p => p.id === editingPostId)?.thumbnail : null) || 'images/posts/default-thumbnail.jpg'
         };
 
         if (editingPostId) {
@@ -374,6 +425,7 @@ postForm.addEventListener('submit', async (e) => {
 // Add image preview functionality
 document.addEventListener('DOMContentLoaded', () => {
     checkLoginStatus();
+    loadSavedImages();
     
     // Add date field and set up image preview
     const postForm = document.getElementById('postForm');

@@ -82,7 +82,6 @@
     }
     .post-card {
       transition: transform 0.2s ease;
-      cursor: pointer;
     }
     .post-card:hover {
       transform: translateY(-2px);
@@ -113,40 +112,68 @@
       animation: modalSlideIn 0.3s ease-out;
     }
     .modal-article {
-      margin-top: 2rem;
       line-height: 1.75;
+      color: #1f2937;
+    }
+    .modal-article h1 {
+      font-size: 2.25rem;
+      margin-bottom: 1.5rem;
+      font-weight: 800;
+      color: #111827;
+    }
+    .modal-article h2 {
+      font-size: 1.875rem;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      font-weight: 700;
+      color: #1f2937;
+    }
+    .modal-article h3 {
+      font-size: 1.5rem;
+      margin-top: 1.5rem;
+      margin-bottom: 0.75rem;
+      font-weight: 600;
+      color: #374151;
     }
     .modal-article p {
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.25rem;
+      font-size: 1.125rem;
+      line-height: 1.75;
     }
-    .modal-article p:last-child {
-      margin-bottom: 0;
-    }
-    .modal-article br {
-      display: block;
-      content: "";
-      margin-top: 0.5rem;
-    }
-    .modal-article h1, 
-    .modal-article h2, 
-    .modal-article h3 {
-      color: #111827;
-      line-height: 1.3;
-    }
-    .modal-article ul, 
-    .modal-article ol {
-      margin-top: 1.5rem;
-      margin-bottom: 1.5rem;
+    .modal-article ul, .modal-article ol {
+      margin: 1.25rem 0;
       padding-left: 1.5rem;
     }
-    .modal-article ul {
-      list-style-type: disc;
-    }
-    .modal-article ol {
-      list-style-type: decimal;
-    }
     .modal-article li {
-      margin-bottom: 0.5rem;
+      margin: 0.5rem 0;
+    }
+    .modal-article img {
+      width: 100%;
+      height: auto;
+      border-radius: 0.5rem;
+      margin: 1.5rem 0;
+    }
+    .modal-article strong {
+      font-weight: 600;
+      color: #111827;
+    }
+    .modal-article em {
+      font-style: italic;
+    }
+    .modal-article code {
+      background-color: #f3f4f6;
+      padding: 0.2rem 0.4rem;
+      border-radius: 0.25rem;
+      font-family: monospace;
+      font-size: 0.875em;
+      color: #0d9488;
+    }
+    .modal-article blockquote {
+      border-left: 4px solid #e5e7eb;
+      padding-left: 1rem;
+      margin: 1.5rem 0;
+      color: #4b5563;
+      font-style: italic;
     }
     @keyframes modalSlideIn {
       from {
@@ -179,14 +206,25 @@
       background: #e5e7eb;
       color: #1f2937;
     }
-    .modal-article img {
-      width: 100%;
-      height: auto;
-      border-radius: 0.5rem;
-      margin-bottom: 1.5rem;
-    }
-    .modal-article h2 {
-      margin-bottom: 1rem;
+    
+    /* Responsive adjustments */
+    @media (max-width: 640px) {
+      .modal-content {
+        padding: 1.5rem;
+        margin: 1rem;
+      }
+      .modal-article h1 {
+        font-size: 1.875rem;
+      }
+      .modal-article h2 {
+        font-size: 1.5rem;
+      }
+      .modal-article h3 {
+        font-size: 1.25rem;
+      }
+      .modal-article p {
+        font-size: 1rem;
+      }
     }
   </style>
 </head>
@@ -222,7 +260,7 @@
       <!-- Placeholder Posts -->
       <div class="post-card border rounded-2xl p-6 shadow-sm bg-white">
         <div class="aspect-w-16 aspect-h-9 mb-4">
-          <img src="https://via.placeholder.com/400x225" alt="Post thumbnail" class="rounded-lg object-cover w-full h-48">
+          <img src="images/posts/crypto-bitcoin.jpg" alt="Mastering Bitcoin for Daily Use" class="rounded-lg object-cover w-full h-48">
         </div>
         <div class="flex items-center gap-2">
           <span class="text-sm text-[#0284c7] font-semibold">Crypto</span>
@@ -234,7 +272,7 @@
       </div>
       <div class="post-card border rounded-2xl p-6 shadow-sm bg-white">
         <div class="aspect-w-16 aspect-h-9 mb-4">
-          <img src="https://via.placeholder.com/400x225" alt="Post thumbnail" class="rounded-lg object-cover w-full h-48">
+          <img src="images/posts/remote-office.jpg" alt="Setting Up Your Digital Office" class="rounded-lg object-cover w-full h-48">
         </div>
         <div class="flex items-center gap-2">
           <span class="text-sm text-[#0284c7] font-semibold">Remote Work</span>
@@ -246,7 +284,7 @@
       </div>
       <div class="post-card border rounded-2xl p-6 shadow-sm bg-white">
         <div class="aspect-w-16 aspect-h-9 mb-4">
-          <img src="https://via.placeholder.com/400x225" alt="Post thumbnail" class="rounded-lg object-cover w-full h-48">
+          <img src="images/posts/nomad-destinations.jpg" alt="Digital Nomad Destinations 2024" class="rounded-lg object-cover w-full h-48">
         </div>
         <div class="flex items-center gap-2">
           <span class="text-sm text-[#0284c7] font-semibold">Travel</span>
@@ -258,7 +296,7 @@
       </div>
       <div class="post-card border rounded-2xl p-6 shadow-sm bg-white">
         <div class="aspect-w-16 aspect-h-9 mb-4">
-          <img src="https://via.placeholder.com/400x225" alt="Post thumbnail" class="rounded-lg object-cover w-full h-48">
+          <img src="images/posts/tax-strategy.jpg" alt="Tax Strategies for Nomads" class="rounded-lg object-cover w-full h-48">
         </div>
         <div class="flex items-center gap-2">
           <span class="text-sm text-[#0284c7] font-semibold">Finance</span>
@@ -270,7 +308,7 @@
       </div>
       <div class="post-card border rounded-2xl p-6 shadow-sm bg-white">
         <div class="aspect-w-16 aspect-h-9 mb-4">
-          <img src="https://via.placeholder.com/400x225" alt="Post thumbnail" class="rounded-lg object-cover w-full h-48">
+          <img src="images/posts/community.jpg" alt="Building Community on the Road" class="rounded-lg object-cover w-full h-48">
         </div>
         <div class="flex items-center gap-2">
           <span class="text-sm text-[#0284c7] font-semibold">Lifestyle</span>
@@ -282,7 +320,7 @@
       </div>
       <div class="post-card border rounded-2xl p-6 shadow-sm bg-white">
         <div class="aspect-w-16 aspect-h-9 mb-4">
-          <img src="https://via.placeholder.com/400x225" alt="Post thumbnail" class="rounded-lg object-cover w-full h-48">
+          <img src="images/posts/digital-security.jpg" alt="Essential Digital Security" class="rounded-lg object-cover w-full h-48">
         </div>
         <div class="flex items-center gap-2">
           <span class="text-sm text-[#0284c7] font-semibold">Technology</span>
@@ -338,5 +376,22 @@
   </div>
 
   <script src="js/main.js"></script>
+  <script>
+  // Load saved images from localStorage
+  function loadSavedImages() {
+      const savedImages = JSON.parse(localStorage.getItem('savedImages') || '{}');
+      Object.entries(savedImages).forEach(([path, data]) => {
+          document.querySelectorAll(`img[src="${path}"]`).forEach(img => {
+              img.src = data;
+          });
+      });
+  }
+  
+  // Load images when the page loads
+  document.addEventListener('DOMContentLoaded', loadSavedImages);
+  
+  // Reload images when posts are updated
+  window.addEventListener('postsUpdated', loadSavedImages);
+  </script>
 </body>
 </html> 

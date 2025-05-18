@@ -189,44 +189,66 @@ window.onclick = (event) => {
     }
 };
 
+// Function to convert markdown to HTML
+function markdownToHtml(markdown) {
+    if (!markdown) return '';
+    
+    return markdown
+        // Convert headers
+        .replace(/^# (.*$)/gm, '<h1 class="text-3xl font-bold mb-4">$1</h1>')
+        .replace(/^## (.*$)/gm, '<h2 class="text-2xl font-bold mb-3">$1</h2>')
+        .replace(/^### (.*$)/gm, '<h3 class="text-xl font-bold mb-2">$1</h3>')
+        // Convert paragraphs
+        .replace(/^\s*(\n)?([^\n]+)/gm, function(match, newline, content) {
+            return newline ? match : `<p class="mb-4">${content}</p>`;
+        })
+        // Convert bold text
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        // Convert italic text
+        .replace(/\*(.*?)\*/g, '<em>$1</em>')
+        // Convert bullet points
+        .replace(/^[\*\-] (.*)$/gm, '<li class="ml-4">$1</li>')
+        // Wrap lists
+        .replace(/(<li.*<\/li>)/s, '<ul class="list-disc mb-4">$1</ul>')
+        // Convert line breaks
+        .replace(/\n/g, '<br>');
+}
+
+// Function to display article in modal
+function displayArticleInModal(title, category, content, image, date) {
+    const modalContent = document.getElementById('modalContent');
+    const formattedContent = markdownToHtml(content);
+    
+    modalContent.innerHTML = `
+        <article class="modal-article prose max-w-none">
+            <div class="flex items-center gap-2 mb-4">
+                <span class="text-sm text-[#0284c7] font-semibold">${category}</span>
+                <span class="text-sm text-gray-500">${date || ''}</span>
+            </div>
+            <h1 class="text-3xl font-bold mb-4">${title}</h1>
+            ${image ? `<img src="${image}" alt="${title}" class="w-full rounded-lg mb-6">` : ''}
+            <div class="article-content">
+                ${formattedContent}
+            </div>
+        </article>
+    `;
+    
+    modal.style.display = 'block';
+}
+
 // Function to attach modal handlers
 function attachModalHandlers() {
     document.querySelectorAll('.post-card').forEach(card => {
-        card.addEventListener('click', () => {
+        const readMoreBtn = card.querySelector('button');
+        readMoreBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent card click event
             const title = card.querySelector('h3').textContent;
             const category = card.querySelector('span').textContent;
-            const description = card.querySelector('p').textContent;
+            const date = card.querySelector('span.text-gray-500').textContent;
             const image = card.querySelector('img').src;
-            const content = card.querySelector('.post-content').innerHTML;
-            const date = card.querySelector('.text-gray-500').textContent;
-
-            // Populate modal content with full article
-            const processedContent = content
-                .replace(/\n\n/g, '</p><p>') // Convert double newlines to paragraphs
-                .replace(/\n/g, '<br>') // Convert single newlines to line breaks
-                .replace(/#{3}\s*(.*?)\s*$/gm, '<h3 class="text-xl font-bold mt-6 mb-3">$1</h3>') // h3 tags
-                .replace(/#{2}\s*(.*?)\s*$/gm, '<h2 class="text-2xl font-bold mt-8 mb-4">$1</h2>') // h2 tags
-                .replace(/#{1}\s*(.*?)\s*$/gm, '<h1 class="text-3xl font-bold mt-10 mb-5">$1</h1>'); // h1 tags
-
-            modalContent.innerHTML = `
-                <div class="mb-6">
-                    <img src="${image}" alt="${title}" class="w-full rounded-lg mb-4">
-                    <div class="flex items-center gap-2 mb-2">
-                        <span class="text-sm text-[#0284c7] font-semibold">${category}</span>
-                        <span class="text-sm text-gray-500">${date}</span>
-                    </div>
-                    <h2 class="text-2xl font-bold mb-4">${title}</h2>
-                    <div class="prose max-w-none">
-                        <p class="text-gray-600 mb-6">${description}</p>
-                        <div class="modal-article prose prose-lg max-w-none">
-                            <p>${processedContent}</p>
-                        </div>
-                    </div>
-                </div>
-            `;
-
-            // Show modal
-            modal.style.display = 'block';
+            const content = card.querySelector('.post-content')?.innerHTML || '';
+            
+            displayArticleInModal(title, category, content, image, date);
         });
     });
 } 
