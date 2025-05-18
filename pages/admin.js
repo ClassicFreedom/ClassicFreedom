@@ -10,6 +10,7 @@ export default function Admin() {
   const [settings, setSettings] = useState({ calendlyLink: '' });
   const [isSettingsSaving, setIsSettingsSaving] = useState(false);
   const [settingsError, setSettingsError] = useState('');
+  const [activeTab, setActiveTab] = useState('posts');
 
   useEffect(() => {
     Promise.all([fetchPosts(), fetchSettings()]);
@@ -82,6 +83,124 @@ export default function Admin() {
     }
   };
 
+  const TabButton = ({ tab, label }) => (
+    <button
+      onClick={() => setActiveTab(tab)}
+      className={`px-4 py-2 font-medium rounded-t-lg ${
+        activeTab === tab
+          ? 'bg-white text-teal-600 border-t border-l border-r'
+          : 'bg-gray-100 text-gray-600 hover:text-gray-800'
+      }`}
+    >
+      {label}
+    </button>
+  );
+
+  const CalendlySettingsTab = () => (
+    <div className="bg-white shadow rounded-lg">
+      <div className="px-4 py-5 sm:p-6">
+        <div className="mb-6">
+          <h2 className="text-xl font-bold text-gray-900">Calendly Integration</h2>
+          <p className="mt-1 text-sm text-gray-500">
+            Configure your Calendly link for consultation bookings. This link will be used for the "Freedom Consulting" button on your website.
+          </p>
+        </div>
+        <form onSubmit={handleSettingsSave} className="space-y-6">
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Calendly Consultation Link
+            </label>
+            <div className="mt-2">
+              <input
+                type="url"
+                value={settings.calendlyLink}
+                onChange={(e) => setSettings({ ...settings, calendlyLink: e.target.value })}
+                placeholder="https://calendly.com/your-link"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 text-base"
+              />
+            </div>
+            <p className="mt-2 text-sm text-gray-500">
+              Enter your Calendly link where clients can book consultations. Make sure your Calendly is set up with Stripe integration for payments.
+            </p>
+          </div>
+          
+          <div className="mt-4">
+            <h3 className="text-lg font-medium text-gray-900 mb-2">Preview</h3>
+            <div className="border rounded-lg p-4 bg-gray-50">
+              <div className="max-w-sm mx-auto">
+                {settings.calendlyLink ? (
+                  <div className="space-y-2">
+                    <p className="text-sm text-gray-600">Your button will appear like this:</p>
+                    <div className="bg-white p-4 rounded-lg shadow">
+                      <h2 className="text-2xl font-bold text-gray-900 mb-2">Freedom Consulting</h2>
+                      <p className="text-gray-600 mb-4">Book a call now</p>
+                      <a
+                        href={settings.calendlyLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block w-full bg-teal-600 text-white rounded-lg py-4 px-6 text-lg font-semibold hover:bg-teal-700 transition-colors text-center"
+                      >
+                        Schedule Consultation
+                      </a>
+                    </div>
+                  </div>
+                ) : (
+                  <p className="text-sm text-gray-500 text-center py-4">
+                    Enter a Calendly link above to see how the button will appear on your website.
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {settingsError && (
+            <div className="text-red-600 text-sm mt-2">{settingsError}</div>
+          )}
+          <div className="flex justify-end">
+            <button
+              type="submit"
+              disabled={isSettingsSaving}
+              className="px-4 py-2 text-sm font-medium text-white bg-teal-600 border border-transparent rounded-md hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 disabled:opacity-50"
+            >
+              {isSettingsSaving ? 'Saving...' : 'Save Settings'}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+
+  const PostsTab = () => (
+    <div className="bg-white shadow rounded-lg">
+      <div className="px-4 py-5 sm:p-6">
+        <h2 className="text-lg font-medium text-gray-900 mb-4">Posts</h2>
+        <div className="space-y-4">
+          {posts.map((post) => (
+            <div
+              key={post._id}
+              className="border rounded-lg p-4 hover:bg-gray-50"
+            >
+              <div className="flex justify-between items-start">
+                <div>
+                  <h3 className="text-lg font-medium text-gray-900">{post.title}</h3>
+                  <p className="text-sm text-gray-500">
+                    Published on {new Date(post.date).toLocaleDateString()}
+                  </p>
+                </div>
+                <button
+                  onClick={() => setSelectedPost(post)}
+                  className="px-3 py-1 text-sm text-teal-600 hover:text-teal-700"
+                >
+                  Edit
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Head>
@@ -95,97 +214,36 @@ export default function Admin() {
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8 space-y-6">
-        {/* Calendly Settings Section */}
-        <div className="bg-white shadow rounded-lg">
-          <div className="px-4 py-5 sm:p-6">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h2 className="text-xl font-bold text-gray-900">Freedom Consulting Settings</h2>
-                <p className="mt-1 text-sm text-gray-500">
-                  Configure your Calendly link for consultation bookings. Make sure your Calendly is set up with Stripe integration for payments.
-                </p>
-              </div>
+      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <div className="space-y-4">
+          <div className="border-b border-gray-200">
+            <div className="flex space-x-2">
+              <TabButton tab="posts" label="Posts" />
+              <TabButton tab="calendly" label="Calendly Settings" />
             </div>
-            <form onSubmit={handleSettingsSave} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Calendly Consultation Link
-                </label>
-                <div className="mt-1">
-                  <input
-                    type="url"
-                    value={settings.calendlyLink}
-                    onChange={(e) => setSettings({ ...settings, calendlyLink: e.target.value })}
-                    placeholder="https://calendly.com/your-link"
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500"
-                  />
-                  <p className="mt-2 text-sm text-gray-500">
-                    Enter your Calendly link where clients can book consultations. This will be displayed as a prominent button on your website.
-                  </p>
-                </div>
-              </div>
-              {settingsError && (
-                <div className="text-red-600 text-sm">{settingsError}</div>
-              )}
-              <div className="flex justify-end">
-                <button
-                  type="submit"
-                  disabled={isSettingsSaving}
-                  className="px-4 py-2 text-sm font-medium text-white bg-teal-600 border border-transparent rounded-md hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 disabled:opacity-50"
-                >
-                  {isSettingsSaving ? 'Saving...' : 'Save Settings'}
-                </button>
-              </div>
-            </form>
           </div>
-        </div>
 
-        {/* Posts Section */}
-        {isLoading ? (
-          <div className="flex justify-center items-center min-h-[400px]">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-600"></div>
-          </div>
-        ) : error ? (
-          <div className="text-center text-red-600 py-8">
-            {error}
-            <button
-              onClick={fetchPosts}
-              className="mt-4 px-4 py-2 bg-teal-600 text-white rounded hover:bg-teal-700"
-            >
-              Try Again
-            </button>
-          </div>
-        ) : (
-          <div className="bg-white shadow rounded-lg">
-            <div className="px-4 py-5 sm:p-6">
-              <h2 className="text-lg font-medium text-gray-900 mb-4">Posts</h2>
-              <div className="space-y-4">
-                {posts.map((post) => (
-                  <div
-                    key={post._id}
-                    className="border rounded-lg p-4 hover:bg-gray-50"
-                  >
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <h3 className="text-lg font-medium text-gray-900">{post.title}</h3>
-                        <p className="text-sm text-gray-500">
-                          Published on {new Date(post.date).toLocaleDateString()}
-                        </p>
-                      </div>
-                      <button
-                        onClick={() => setSelectedPost(post)}
-                        className="px-3 py-1 text-sm text-teal-600 hover:text-teal-700"
-                      >
-                        Edit
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
+          {isLoading ? (
+            <div className="flex justify-center items-center min-h-[400px]">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-600"></div>
             </div>
-          </div>
-        )}
+          ) : error ? (
+            <div className="text-center text-red-600 py-8">
+              {error}
+              <button
+                onClick={fetchPosts}
+                className="mt-4 px-4 py-2 bg-teal-600 text-white rounded hover:bg-teal-700"
+              >
+                Try Again
+              </button>
+            </div>
+          ) : (
+            <>
+              {activeTab === 'posts' && <PostsTab />}
+              {activeTab === 'calendly' && <CalendlySettingsTab />}
+            </>
+          )}
+        </div>
       </main>
 
       {selectedPost && (
