@@ -37,10 +37,13 @@ export default function Admin() {
     try {
       const response = await fetch('/api/settings');
       const data = await response.json();
+      console.log('Admin - Settings fetched:', data);
       if (data.success) {
         setSettings(data.data);
+        console.log('Admin - Settings state updated:', data.data);
       }
     } catch (error) {
+      console.error('Admin - Error fetching settings:', error);
       setSettingsError('Failed to load settings');
     }
   };
@@ -54,6 +57,7 @@ export default function Admin() {
     e.preventDefault();
     setIsSettingsSaving(true);
     setSettingsError('');
+    console.log('Admin - Saving settings:', settings);
 
     try {
       const response = await fetch('/api/settings', {
@@ -65,10 +69,13 @@ export default function Admin() {
       });
 
       const data = await response.json();
+      console.log('Admin - Save settings response:', data);
       if (!data.success) {
         throw new Error('Failed to save settings');
       }
+      console.log('Admin - Settings saved successfully');
     } catch (error) {
+      console.error('Admin - Error saving settings:', error);
       setSettingsError('Failed to save settings. Please try again.');
     } finally {
       setIsSettingsSaving(false);

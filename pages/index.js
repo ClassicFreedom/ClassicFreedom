@@ -35,8 +35,10 @@ export default function Home() {
     try {
       const response = await fetch('/api/settings');
       const data = await response.json();
+      console.log('Settings response:', data);
       if (data.success) {
         setSettings(data.data);
+        console.log('Settings updated:', data.data);
       }
     } catch (error) {
       console.error('Error fetching settings:', error);
@@ -44,6 +46,7 @@ export default function Home() {
   };
 
   useEffect(() => {
+    console.log('Fetching initial data...');
     Promise.all([fetchPosts(), fetchSettings()]);
   }, [fetchPosts]);
 
