@@ -19,6 +19,10 @@ const PostSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please provide an image URL for this post.']
   },
+  thumbnail: {
+    type: String,
+    default: '/images/default-thumbnail.jpg'
+  },
   date: {
     type: Date,
     default: Date.now

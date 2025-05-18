@@ -151,7 +151,7 @@ function createPostElement(post) {
     div.className = 'border rounded-lg p-4 flex items-start gap-4 bg-white';
     div.innerHTML = `
         <div class="w-24 h-24 flex-shrink-0">
-            <img src="${post.thumbnail || 'images/posts/default-thumbnail.jpg'}" alt="${post.title}" class="w-full h-full object-cover rounded">
+            <img src="${post.thumbnail || '/images/default-thumbnail.jpg'}" alt="${post.title}" class="w-full h-full object-cover rounded">
         </div>
         <div class="flex-1">
             <div class="flex items-center gap-2 mb-2">
@@ -402,7 +402,7 @@ postForm.addEventListener('submit', async (e) => {
             content: document.getElementById('postContent').value.trim(),
             link: document.getElementById('postLink').value.trim(),
             date: document.getElementById('postDate').value || new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
-            thumbnail: thumbnail || (editingPostId ? posts.find(p => p.id === editingPostId)?.thumbnail : null) || 'images/posts/default-thumbnail.jpg'
+            thumbnail: thumbnail || (editingPostId ? posts.find(p => p.id === editingPostId)?.thumbnail : null) || '/images/default-thumbnail.jpg'
         };
 
         if (editingPostId) {
