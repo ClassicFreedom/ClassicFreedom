@@ -50,8 +50,9 @@ const PostEditor = ({ post, onSave, onCancel }) => {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label className="block text-sm font-medium text-gray-700">Title</label>
+        <label htmlFor="post-title" className="block text-sm font-medium text-gray-700">Title</label>
         <input
+          id="post-title"
           type="text"
           name="title"
           value={editedPost.title}
@@ -62,8 +63,9 @@ const PostEditor = ({ post, onSave, onCancel }) => {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700">Publication Date</label>
+        <label htmlFor="post-date" className="block text-sm font-medium text-gray-700">Publication Date</label>
         <input
+          id="post-date"
           type="date"
           name="date"
           value={editedPost.date}
@@ -74,8 +76,9 @@ const PostEditor = ({ post, onSave, onCancel }) => {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700">Excerpt</label>
+        <label htmlFor="post-excerpt" className="block text-sm font-medium text-gray-700">Excerpt</label>
         <textarea
+          id="post-excerpt"
           name="excerpt"
           value={editedPost.excerpt}
           onChange={handleChange}
@@ -86,8 +89,9 @@ const PostEditor = ({ post, onSave, onCancel }) => {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700">Content</label>
+        <label htmlFor="post-content" className="block text-sm font-medium text-gray-700">Content</label>
         <textarea
+          id="post-content"
           name="content"
           value={editedPost.content}
           onChange={handleChange}
