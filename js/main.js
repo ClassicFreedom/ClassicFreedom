@@ -3,14 +3,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const forms = document.querySelectorAll('form');
     let currentPage = 1;
     const postsPerPage = 6;
-    let defaultThumbnail = '/images/default-thumbnail.jpg'; // Default fallback
+    let defaultThumbnail = '/images/default-thumbnail.jpg'; // Using custom default thumbnail
     
     // Fetch settings
     async function fetchSettings() {
         try {
             const response = await fetch('/api/settings');
             const data = await response.json();
-            if (data.success && data.data.defaultThumbnail) {
+            if (data.success && data.data.defaultThumbnail && data.data.defaultThumbnail !== '/images/default-thumbnail.jpg') {
                 defaultThumbnail = data.data.defaultThumbnail;
             }
         } catch (error) {
