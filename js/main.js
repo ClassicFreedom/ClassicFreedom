@@ -3,7 +3,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const forms = document.querySelectorAll('form');
     let currentPage = 1;
     const postsPerPage = 6;
+    let defaultThumbnail = 'https://via.placeholder.com/400x225'; // Default fallback
     
+    // Fetch settings
+    async function fetchSettings() {
+        try {
+            const response = await fetch('/api/settings');
+            const data = await response.json();
+            if (data.success && data.data.defaultThumbnail) {
+                defaultThumbnail = data.data.defaultThumbnail;
+            }
+        } catch (error) {
+            console.error('Error fetching settings:', error);
+        }
+    }
+
     forms.forEach(form => {
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -107,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 postsContainer.innerHTML = displayPosts.map(post => `
                     <div class="post-card border rounded-2xl p-6 shadow-sm bg-white">
                         <div class="aspect-w-16 aspect-h-9 mb-4">
-                            <img src="${post.thumbnail || 'https://via.placeholder.com/400x225'}" alt="${post.title}" class="rounded-lg object-cover w-full h-48">
+                            <img src="${post.thumbnail || defaultThumbnail}" alt="${post.title}" class="rounded-lg object-cover w-full h-48">
                         </div>
                         <div class="flex items-center gap-2">
                             <span class="text-sm text-[#0284c7] font-semibold">${post.category}</span>
@@ -138,8 +152,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Initial load of content
-    updateSocialLinks();
-    updatePosts();
+    fetchSettings().then(() => {
+        updateSocialLinks();
+        updatePosts();
+    });
 
     // Listen for updates from admin page
     window.addEventListener('socialLinksUpdated', (event) => {

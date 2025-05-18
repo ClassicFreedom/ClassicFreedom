@@ -7,7 +7,7 @@ export default function Admin() {
   const [selectedPost, setSelectedPost] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
-  const [settings, setSettings] = useState({ calendlyLink: '' });
+  const [settings, setSettings] = useState({ calendlyLink: '', defaultThumbnail: '' });
   const [isSettingsSaving, setIsSettingsSaving] = useState(false);
   const [settingsError, setSettingsError] = useState('');
   const [activeTab, setActiveTab] = useState('posts');
@@ -100,32 +100,70 @@ export default function Admin() {
     <div className="bg-white shadow rounded-lg">
       <div className="px-4 py-5 sm:p-6">
         <div className="mb-6">
-          <h2 className="text-xl font-bold text-gray-900">Calendly Integration</h2>
+          <h2 className="text-xl font-bold text-gray-900">Site Settings</h2>
           <p className="mt-1 text-sm text-gray-500">
-            Configure your Calendly link for consultation bookings. This link will be used for the "Freedom Consulting" button on your website.
+            Configure your Calendly link and default image settings.
           </p>
         </div>
         <form onSubmit={handleSettingsSave} className="space-y-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label htmlFor="calendlyLink" className="block text-sm font-medium text-gray-700">
               Calendly Consultation Link
             </label>
             <div className="mt-2">
               <input
+                id="calendlyLink"
                 type="url"
+                name="calendlyLink"
                 value={settings.calendlyLink}
                 onChange={(e) => setSettings({ ...settings, calendlyLink: e.target.value })}
                 placeholder="https://calendly.com/your-link"
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 text-base"
+                aria-describedby="calendly-link-description"
               />
             </div>
-            <p className="mt-2 text-sm text-gray-500">
+            <p id="calendly-link-description" className="mt-2 text-sm text-gray-500">
               Enter your Calendly link where clients can book consultations. Make sure your Calendly is set up with Stripe integration for payments.
             </p>
           </div>
+
+          <div className="mt-6">
+            <label htmlFor="defaultThumbnail" className="block text-sm font-medium text-gray-700">
+              Default Post Thumbnail URL
+            </label>
+            <div className="mt-2">
+              <input
+                id="defaultThumbnail"
+                type="url"
+                name="defaultThumbnail"
+                value={settings.defaultThumbnail}
+                onChange={(e) => setSettings({ ...settings, defaultThumbnail: e.target.value })}
+                placeholder="https://example.com/default-image.jpg"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 text-base"
+                aria-describedby="default-thumbnail-description"
+              />
+            </div>
+            <p id="default-thumbnail-description" className="mt-2 text-sm text-gray-500">
+              Enter the URL for the default thumbnail image that will be used when a post doesn't have its own thumbnail.
+            </p>
+            {settings.defaultThumbnail && (
+              <div className="mt-4">
+                <p className="text-sm text-gray-600 mb-2">Preview:</p>
+                <img
+                  src={settings.defaultThumbnail}
+                  alt="Default thumbnail preview"
+                  className="w-[200px] h-[112px] object-cover rounded-lg border"
+                  onError={(e) => {
+                    e.target.src = 'https://via.placeholder.com/400x225';
+                    e.target.alt = 'Invalid image URL';
+                  }}
+                />
+              </div>
+            )}
+          </div>
           
           <div className="mt-4">
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Preview</h3>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">Calendly Preview</h3>
             <div className="border rounded-lg p-4 bg-gray-50">
               <div className="max-w-sm mx-auto">
                 {settings.calendlyLink ? (
@@ -154,7 +192,9 @@ export default function Admin() {
           </div>
 
           {settingsError && (
-            <div className="text-red-600 text-sm mt-2">{settingsError}</div>
+            <div className="text-red-600 text-sm mt-2" role="alert">
+              {settingsError}
+            </div>
           )}
           <div className="flex justify-end">
             <button
@@ -188,6 +228,7 @@ export default function Admin() {
                   </p>
                 </div>
                 <button
+                  type="button"
                   onClick={() => setSelectedPost(post)}
                   className="px-3 py-1 text-sm text-teal-600 hover:text-teal-700"
                 >
